@@ -146,6 +146,5 @@ public class Main {
             }
         }while(stop);
 
-        System.out.println("test");
     }
 }
