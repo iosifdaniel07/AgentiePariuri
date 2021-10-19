@@ -1,4 +1,8 @@
-package agency;
+package app.classes.account;
+
+import app.classes.personbank.Card;
+import app.classes.personbank.ContBancar;
+import app.classes.personbank.Person;
 
 public class Account {
 
@@ -58,7 +62,7 @@ public class Account {
 
         if(_contbanc != null){
             if(sum >= 20){
-                if(ContBancar.retragere(sum)== true) {
+                if(_cardacc.retragere(sum)== true) {
                     System.out.println("Depunere reusita!");
                     _sold += sum;
                 }

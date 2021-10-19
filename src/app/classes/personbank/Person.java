@@ -1,4 +1,4 @@
-package agency;
+package app.classes.personbank;
 
 public class Person {
 
@@ -38,5 +38,16 @@ public class Person {
         return _adress;
     }
 
+    public void changeFname(String _firstname){
+        this._firstname = _firstname;
+    }
+
+    public void changeLname(String _laststname){
+        this._lastname = _lastname;
+    }
+
+    public void changeAdress(String _adress){
+        this._adress = _adress;
+    }
 }
 
