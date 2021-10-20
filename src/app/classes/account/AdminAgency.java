@@ -2,6 +2,7 @@ package app.classes.account;
 
 import app.classes.personbank.Person;
 
+import javax.swing.*;
 import java.sql.*;
 
 public class AdminAgency {
@@ -151,6 +152,8 @@ public class AdminAgency {
 
                 preparedStatement.execute();
 
+                conn.close();
+
         }catch(SQLException ex){
             ex.printStackTrace();
         }
@@ -173,7 +176,7 @@ public class AdminAgency {
         try{
             Connection conn  = DriverManager.getConnection(url,username,password);
 
-            String query = "INSERT INTO database.football (KEY, Team1, CoteTeam1, CoteTeam2, CoteEgal)" + "VALUES(?,?,?,?,?,?)";
+            String query = "INSERT INTO `database`.`fotbal` (`key`, `team1`, `team2`, `cote1`, `cote2`, `cotex`) VALUES (?, ?, ?, ?, ?, ?)";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             preparedStatement.setInt(1,key);
             preparedStatement.setString(2,Team1);
@@ -183,14 +186,74 @@ public class AdminAgency {
             preparedStatement.setDouble(6,CoteEgal);
 
             preparedStatement.executeUpdate();
+            JOptionPane.showMessageDialog(null,"Meci adaugat cu succes!");
 
+            conn.close();
+
+        }catch(SQLException ex){
+            JOptionPane.showMessageDialog(null,"Meci nu a fost adaugat!");
+            ex.printStackTrace();
+        }
+
+    }
+
+    public void removeFootbalGame(int key){
+        String username = "root";
+        String password = "password07";
+        String url = "jdbc:mysql://127.0.0.1:3306/?user=root";
+
+
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch(ClassNotFoundException ex){
+            ex.printStackTrace();
+        }
+
+        try{
+            Connection conn  = DriverManager.getConnection(url,username,password);
+
+            String query = "DELETE FROM `database`.`fotbal` WHERE `key` = ?";
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setInt(1,key);
+
+            preparedStatement.execute();
 
             conn.close();
 
         }catch(SQLException ex){
             ex.printStackTrace();
         }
+    }
 
+    public void modificareCote(int key, double cote1, double cote2, double cotex){
+        String username = "root";
+        String password = "password07";
+        String url = "jdbc:mysql://127.0.0.1:3306/?user=root";
+
+
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch(ClassNotFoundException ex){
+            ex.printStackTrace();
+        }
+
+        try{
+            Connection conn  = DriverManager.getConnection(url,username,password);
+
+            String query = "UPDATE `database`.`fotbal` SET `cote1` = ?, `cote2` = ?, `cotex` = ? WHERE (`key` = ?);";
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setDouble(1,cote1);
+            preparedStatement.setDouble(2,cote2);
+            preparedStatement.setDouble(3,cotex);
+            preparedStatement.setInt(4,key);
+
+            preparedStatement.executeUpdate();
+
+            conn.close();
+
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
     }
 
 }

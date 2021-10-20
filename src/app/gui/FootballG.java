@@ -7,10 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class FootballG {
 
@@ -104,7 +101,7 @@ public class FootballG {
             @Override
             public void actionPerformed(ActionEvent e) {
                 AdminAgency a = AdminAgency.getInstance();
-                a.addFootbalGame(1,"asddas","dsdaa",1.3,1.6,1.7);
+                a.addFootbalGame(Integer.valueOf(_addKeyGameField.getText()),_team1Field.getText(),_team2Field.getText(),Double.valueOf(_team1CoteField.getText()),Double.valueOf(_team2CoteField.getText()),Double.valueOf(_equalityField.getText()));
             }
         });
         _footballPanel.add(_createGame);
@@ -152,8 +149,45 @@ public class FootballG {
         _deleteGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String st = _deleteKeyField.getText();
+                int d = Integer.valueOf(st);
 
+                String username = "root";
+                String password = "password07";
+                String url = "jdbc:mysql://127.0.0.1:3306/?user=root";
 
+                try{
+                    Class.forName("com.mysql.cj.jdbc.Driver");
+                } catch(ClassNotFoundException ex){
+                    ex.printStackTrace();
+                }
+
+                try{
+                    Connection  conn  = DriverManager.getConnection(url,username,password);
+
+                    String query = "SELECT `key` FROM `database`.`fotbal` WHERE `key` = ?";
+                    PreparedStatement preparedStatement = conn.prepareStatement(query);
+                    preparedStatement.setInt(1,d);
+
+                    ResultSet res = preparedStatement.executeQuery();
+
+                    int rezultat = -1;
+                    while(res.next()){
+
+                        rezultat = res.getInt("key");
+                    }
+                    if(rezultat == d){
+                        AdminAgency a = AdminAgency.getInstance();
+                        a.removeFootbalGame(d);
+                        JOptionPane.showMessageDialog(null,"Meci sters cu succes!");
+                    }else{
+                        JOptionPane.showMessageDialog(null,"Numarul meciului este gresit!");
+                    }
+
+                    conn.close();
+                }catch(SQLException ex){
+                    ex.printStackTrace();
+                }
             }
         });
         _footballPanel.add(_deleteGame);
@@ -206,6 +240,47 @@ public class FootballG {
         _modifyCote.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
+                String st = _modificareKeyTextField.getText();
+                int d = Integer.valueOf(st);
+
+                String username = "root";
+                String password = "password07";
+                String url = "jdbc:mysql://127.0.0.1:3306/?user=root";
+
+                try{
+                    Class.forName("com.mysql.cj.jdbc.Driver");
+                } catch(ClassNotFoundException ex){
+                    ex.printStackTrace();
+                }
+
+                try{
+                    Connection  conn  = DriverManager.getConnection(url,username,password);
+
+                    String query = "SELECT `key` FROM `database`.`fotbal` WHERE `key` = ?";
+                    PreparedStatement preparedStatement = conn.prepareStatement(query);
+                    preparedStatement.setInt(1,d);
+
+                    ResultSet res = preparedStatement.executeQuery();
+
+                    int rezultat = -1;
+                    while(res.next()){
+
+                        rezultat = res.getInt("key");
+                    }
+                    if(rezultat == d){
+                        AdminAgency a = AdminAgency.getInstance();
+                        a.modificareCote(Integer.valueOf(_modificareKeyTextField.getText()),Double.valueOf(_modificareCotaTeam1Field.getText()),
+                                Double.valueOf(_modificareCotaTeam2Field.getText()),Double.valueOf(_modificareCotaEgalField.getText()));
+                        JOptionPane.showMessageDialog(null,"Cote modificate cu succes!");
+                    }else{
+                        JOptionPane.showMessageDialog(null,"Numarul meciului este gresit!");
+                    }
+
+                    conn.close();
+                }catch(SQLException ex){
+                    ex.printStackTrace();
+                }
 
             }
         });
